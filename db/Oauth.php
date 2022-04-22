@@ -25,4 +25,26 @@ class Oauth
 
         print_r($result);
     }
+
+    function TestToken($token)
+    {
+        $ch = curl_init();
+
+        curl_setopt($ch, CURLOPT_URL, 'http://192.168.0.113/oauth/resource.php');
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, "access_token={$token}");
+
+        $headers = array();
+        $headers[] = 'Content-Type: application/x-www-form-urlencoded';
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+        $result = curl_exec($ch);
+        if (curl_errno($ch)) {
+            return 'Error:';
+        }
+        curl_close($ch);
+        $data=json_decode($result);
+        return $data;
+    }
 }

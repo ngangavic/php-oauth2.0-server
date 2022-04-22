@@ -12,8 +12,16 @@ if (!isset($_SESSION['email'])) {
 }
 
 if (isset($_POST['token'])) {
-    $oauth=new Oauth();
+    $oauth = new Oauth();
     $oauth->GenerateToken();
+    header("location:dashboard.php");
+}
+
+if (isset($_POST['test'])) {
+    $oauth = new Oauth();
+    $response = $oauth->TestToken("e4028597c07b51d24cc1b6dd48336d52097c24b5");
+    $_SESSION['test'] = $response;
+
     header("location:dashboard.php");
 }
 
@@ -51,7 +59,14 @@ if (isset($_POST['token'])) {
 
         <form action="" method="POST">
             <button type="submit" name="token" class="btn btn-sm btn-primary">Generate token</button>
+            <button type="submit" name="test" class="btn btn-sm btn-primary">Test token</button>
         </form>
+
+        <?php if (isset($_SESSION['test'])) { ?>
+            <div class="alert alert-primary" role="alert">
+                <?php print_r($_SESSION['test']); ?>
+            </div>
+        <?php } //unset($_SESSION['test']); ?>
 
         <table class="table">
             <thead>
