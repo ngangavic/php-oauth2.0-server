@@ -41,8 +41,12 @@ class User extends Database
 
     function GetTokens()
     {
-        $data = $this->db->Select("SELECT * FROM `oauth_access_tokens` WHERE `user_id`=:userid", ["userid" => $_SESSION['email']]);
-        return  $data;
+        $clientId = $this->db->Select("SELECT * FROM `oauth_clients` WHERE `user_id`=:userid", ["userid" => $_SESSION['email']]);
+        foreach ($clientId as $row) {
+            $data = $this->db->Select("SELECT * FROM `oauth_access_tokens` WHERE `client_id`=:client_id", ["client_id" => $row['client_id']]);
+
+            return  $data;
+        }
     }
 
     function GetSecrets()
