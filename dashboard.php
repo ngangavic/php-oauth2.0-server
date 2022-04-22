@@ -4,11 +4,19 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 require "db/Database.php";
 require "db/User.php";
+require "db/Oauth.php";
 $user = new User();
 
 if (!isset($_SESSION['email'])) {
     header("location:index.php");
 }
+
+if (isset($_POST['token'])) {
+    $oauth=new Oauth();
+    $oauth->GenerateToken();
+    header("location:dashboard.php");
+}
+
 ?>
 <!doctype html>
 <html lang="en">
@@ -21,7 +29,7 @@ if (!isset($_SESSION['email'])) {
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 
-    <title>Hello, world!</title>
+    <title>Dashboard</title>
 </head>
 
 <body>
@@ -40,6 +48,10 @@ if (!isset($_SESSION['email'])) {
                 </div>
             </div>
         </nav>
+
+        <form action="" method="POST">
+            <button type="submit" name="token" class="btn btn-sm btn-primary">Generate token</button>
+        </form>
 
         <table class="table">
             <thead>
@@ -66,9 +78,9 @@ if (!isset($_SESSION['email'])) {
                 }
                 if ($count == 0) {
                 ?>
-                <tr>
-                    <th colspan="4">No records</th>
-                </tr>
+                    <tr>
+                        <th colspan="4">No records</th>
+                    </tr>
                 <?php } ?>
             </tbody>
         </table>
